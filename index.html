@@ -1,0 +1,1889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stephanie — Brand OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FDF8F5;
+    --bg2: #FAF3EF;
+    --card: #FFFFFF;
+    --pink: #E8C4C4;
+    --pink-dark: #D4A0A0;
+    --pink-light: #F5E6E6;
+    --black: #1A1A1A;
+    --gray: #6B6B6B;
+    --gray-light: #E8E2DE;
+    --border: #EDE5E0;
+    --linkedin: #0077B5;
+    --tiktok: #000000;
+    --youtube: #FF0000;
+    --shadow: 0 2px 16px rgba(0,0,0,0.06);
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--black);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+  h1,h2,h3,h4 { font-family: 'DM Serif Display', serif; font-weight: 400; }
+
+  /* LAYOUT */
+  .shell { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: 220px; min-width: 220px;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    padding: 32px 0;
+    position: fixed; top: 0; left: 0; height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+  }
+  .sidebar-brand {
+    padding: 0 24px 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-brand h2 { font-size: 18px; color: var(--black); line-height: 1.2; }
+  .sidebar-brand span { font-size: 11px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; }
+  .nav { padding: 20px 0; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 24px;
+    cursor: pointer;
+    color: var(--gray);
+    font-size: 13px;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .nav-item:hover { color: var(--black); background: var(--bg); }
+  .nav-item.active { color: var(--black); border-left-color: var(--pink-dark); background: var(--pink-light); }
+  .nav-icon { font-size: 16px; }
+  .main { margin-left: 220px; flex: 1; }
+  .topbar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .topbar-title { font-size: 22px; }
+  .topbar-date { font-size: 12px; color: var(--gray); }
+  .content { padding: 40px; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  .card + .card { margin-top: 20px; }
+  .card-title { font-size: 16px; margin-bottom: 16px; color: var(--black); }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+  /* FORM ELEMENTS */
+  input, textarea, select {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--black);
+    width: 100%;
+    outline: none;
+    transition: border 0.15s;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--pink-dark); }
+  textarea { resize: vertical; min-height: 80px; }
+  label { font-size: 12px; color: var(--gray); font-weight: 500; margin-bottom: 5px; display: block; letter-spacing: 0.03em; text-transform: uppercase; }
+  .form-group { margin-bottom: 16px; }
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.02em;
+  }
+  .btn-primary { background: var(--black); color: #fff; }
+  .btn-primary:hover { background: #333; }
+  .btn-secondary { background: var(--pink-light); color: var(--black); border: 1px solid var(--pink); }
+  .btn-secondary:hover { background: var(--pink); }
+  .btn-sm { padding: 6px 14px; font-size: 12px; }
+  .btn-danger { background: #fee2e2; color: #dc2626; }
+  .btn-danger:hover { background: #fecaca; }
+
+  /* TAGS */
+  .tag {
+    display: inline-block;
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .tag-linkedin { background: #E8F4FB; color: var(--linkedin); }
+  .tag-tiktok { background: #F0F0F0; color: #333; }
+  .tag-youtube { background: #FEE8E8; color: var(--youtube); }
+  .tag-idea { background: #FFF7E6; color: #B45309; }
+  .tag-scripting { background: #EFF6FF; color: #1D4ED8; }
+  .tag-filming { background: #F5F3FF; color: #6D28D9; }
+  .tag-editing { background: #F0FDF4; color: #166534; }
+  .tag-published { background: #F0FDF4; color: #166534; }
+
+  /* BRAND HOME */
+  .mission-block { padding: 28px; background: var(--bg2); border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 20px; }
+  .mission-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--pink-dark); margin-bottom: 8px; font-weight: 600; }
+  .mission-text { font-size: 20px; line-height: 1.5; font-family: 'DM Serif Display', serif; color: var(--black); }
+  .mission-edit { background: none; border: none; padding: 0; font-size: 12px; color: var(--gray); cursor: pointer; text-decoration: underline; margin-top: 8px; display: block; font-family: 'DM Sans', sans-serif; }
+  .pillars-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; margin-top: 16px; }
+  .pillar-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    position: relative;
+  }
+  .pillar-card h4 { font-size: 15px; margin-bottom: 6px; }
+  .pillar-card p { font-size: 12px; color: var(--gray); line-height: 1.5; }
+  .pillar-accent { width: 32px; height: 3px; background: var(--pink); border-radius: 2px; margin-bottom: 12px; }
+  .focus-block {
+    background: var(--pink-light);
+    border: 1px solid var(--pink);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-top: 20px;
+  }
+  .focus-block h3 { font-size: 15px; margin-bottom: 8px; }
+  .add-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: var(--bg); border: 1px dashed var(--pink-dark); border-radius: 20px; font-size: 12px; color: var(--pink-dark); cursor: pointer; margin-top: 10px; }
+
+  /* KANBAN */
+  .kanban { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; overflow-x: auto; }
+  .kanban-col { min-width: 200px; }
+  .kanban-col-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+  }
+  .kanban-col-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray); }
+  .kanban-col-count { font-size: 11px; background: var(--gray-light); color: var(--gray); border-radius: 10px; padding: 2px 8px; }
+  .kanban-cards { display: flex; flex-direction: column; gap: 10px; min-height: 60px; }
+  .kanban-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    cursor: grab;
+    transition: box-shadow 0.15s;
+    position: relative;
+  }
+  .kanban-card:hover { box-shadow: var(--shadow); }
+  .kanban-card.dragging { opacity: 0.5; }
+  .kanban-card-title { font-size: 13px; font-weight: 500; margin-bottom: 8px; line-height: 1.4; }
+  .kanban-card-meta { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .kanban-card-type { font-size: 11px; color: var(--gray); }
+  .kanban-card-delete { position: absolute; top: 8px; right: 8px; background: none; border: none; cursor: pointer; color: var(--gray); font-size: 14px; opacity: 0; transition: opacity 0.15s; }
+  .kanban-card:hover .kanban-card-delete { opacity: 1; }
+  .kanban-drop-zone { min-height: 60px; border-radius: 8px; transition: background 0.15s; }
+  .kanban-drop-zone.drag-over { background: var(--pink-light); border: 2px dashed var(--pink-dark); }
+  .add-card-btn { margin-top: 10px; width: 100%; padding: 8px; background: none; border: 1px dashed var(--border); border-radius: 8px; color: var(--gray); font-size: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+  .add-card-btn:hover { background: var(--bg); border-color: var(--pink-dark); color: var(--black); }
+
+  /* PLATFORM PULSE */
+  .platform-section { margin-bottom: 30px; }
+  .platform-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .platform-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .platform-header h3 { font-size: 18px; }
+  .pulse-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+  .pulse-stat { background: var(--bg2); border-radius: 10px; padding: 16px; text-align: center; }
+  .pulse-stat-label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .pulse-stat-value { font-size: 24px; font-family: 'DM Serif Display', serif; }
+  .pulse-stat-change { font-size: 11px; margin-top: 4px; }
+  .pulse-stat-change.up { color: #16a34a; }
+  .pulse-stat-change.down { color: #dc2626; }
+  .chart-wrap { position: relative; height: 160px; margin: 8px 0; }
+  canvas { border-radius: 8px; }
+  .log-row { display: flex; gap: 12px; align-items: flex-end; margin-bottom: 16px; flex-wrap: wrap; }
+  .log-row .form-group { margin-bottom: 0; flex: 1; min-width: 120px; }
+
+  /* POST PERFORMANCE */
+  .perf-toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
+  .perf-table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left; padding: 10px 14px;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--gray); font-weight: 600;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer; user-select: none;
+    white-space: nowrap;
+  }
+  th:hover { color: var(--black); }
+  th .sort-icon { margin-left: 4px; opacity: 0.5; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; font-size: 13px; }
+  tr:hover td { background: var(--bg); }
+  .perf-score { font-weight: 600; font-family: 'DM Serif Display', serif; font-size: 16px; }
+  .pattern-box { background: var(--pink-light); border: 1px solid var(--pink); border-radius: 10px; padding: 16px 20px; margin-top: 20px; }
+  .pattern-box h4 { font-size: 14px; margin-bottom: 8px; }
+  .pattern-item { font-size: 13px; color: var(--gray); margin-bottom: 4px; }
+  .pattern-item span { color: var(--black); font-weight: 600; }
+
+  /* AI ASSISTANT */
+  .ai-wrap { max-width: 720px; }
+  .ai-result { margin-top: 24px; }
+  .ai-result-block { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+  .ai-result-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--pink-dark); font-weight: 600; margin-bottom: 10px; }
+  .ai-result-content { font-size: 14px; line-height: 1.7; white-space: pre-wrap; }
+  .ai-loading { display: flex; align-items: center; gap: 10px; color: var(--gray); font-size: 13px; padding: 20px 0; }
+  .ai-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink-dark); animation: pulse 1.2s infinite; }
+  .ai-dot:nth-child(2) { animation-delay: 0.2s; }
+  .ai-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+  .api-key-notice { background: #FFF7ED; border: 1px solid #FED7AA; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #92400E; margin-bottom: 16px; }
+
+  /* MONTHLY REPORT */
+  .report-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
+  .report-stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .report-stat { text-align: center; }
+  .report-stat-num { font-family: 'DM Serif Display', serif; font-size: 36px; line-height: 1; }
+  .report-stat-label { font-size: 12px; color: var(--gray); margin-top: 4px; }
+  .report-section { margin-bottom: 20px; }
+  .report-section h4 { font-size: 14px; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+  .report-insight { font-size: 13px; line-height: 1.7; color: var(--gray); }
+  .report-insight span { color: var(--black); font-weight: 600; }
+
+  /* SETTINGS */
+  .settings-section { max-width: 560px; }
+  .settings-section + .settings-section { margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--border); }
+  .settings-desc { font-size: 12px; color: var(--gray); margin-bottom: 14px; line-height: 1.6; }
+  .sync-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 4px 12px; border-radius: 20px; }
+  .sync-status.ok { background: #F0FDF4; color: #166534; }
+  .sync-status.err { background: #FEF2F2; color: #991B1B; }
+  .sync-status.idle { background: var(--bg2); color: var(--gray); }
+  .dot-status { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 200; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--card); border-radius: 16px; padding: 32px; width: 460px; max-width: 95vw; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+  .modal h3 { font-size: 20px; margin-bottom: 20px; }
+  .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+  /* UTIL */
+  .flex { display: flex; }
+  .gap-2 { gap: 8px; }
+  .gap-3 { gap: 12px; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  .mt-1 { margin-top: 6px; }
+  .mt-2 { margin-top: 12px; }
+  .mt-3 { margin-top: 20px; }
+  .mt-4 { margin-top: 28px; }
+  .mb-1 { margin-bottom: 6px; }
+  .mb-2 { margin-bottom: 12px; }
+  .text-gray { color: var(--gray); }
+  .text-sm { font-size: 12px; }
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+  .empty-state { text-align: center; padding: 40px; color: var(--gray); }
+  .empty-state p { font-size: 13px; margin-top: 8px; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--gray-light); border-radius: 3px; }
+
+  /* TOAST */
+  #toast-container { position: fixed; bottom: 28px; right: 28px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+  .toast {
+    background: var(--black); color: #fff;
+    padding: 12px 20px; border-radius: 10px;
+    font-size: 13px; font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    opacity: 0; transform: translateY(12px);
+    transition: opacity 0.25s, transform 0.25s;
+    pointer-events: auto;
+    max-width: 320px;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.success { background: #166534; }
+  .toast.error { background: #991B1B; }
+
+  /* TOPBAR SYNC */
+  .topbar-sync { display: flex; align-items: center; gap: 8px; }
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gray-light); transition: background 0.3s; }
+  .sync-dot.syncing { background: #FBBF24; animation: pulse-dot 1s infinite; }
+  .sync-dot.ok { background: #22C55E; }
+  .sync-dot.err { background: #EF4444; }
+  @keyframes pulse-dot { 0%,100%{opacity:0.4} 50%{opacity:1} }
+  .sync-label { font-size: 11px; color: var(--gray); }
+
+  /* STATS BAR */
+  .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  .stat-chip { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; }
+  .stat-chip-label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .stat-chip-value { font-size: 22px; font-family: 'DM Serif Display', serif; }
+
+  /* BEST BADGE */
+  .best-badge { display: inline-block; background: var(--pink-light); color: var(--pink-dark); font-size: 10px; font-weight: 700; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 10px; margin-left: 6px; vertical-align: middle; text-transform: uppercase; }
+
+  /* COPY BTN */
+  .copy-btn { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; font-size: 11px; color: var(--gray); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; margin-top: 10px; }
+  .copy-btn:hover { background: var(--bg); color: var(--black); }
+
+  /* STREAK */
+  .streak-pill { display: inline-flex; align-items: center; gap: 6px; background: var(--pink-light); border: 1px solid var(--pink); border-radius: 20px; padding: 5px 14px; font-size: 12px; color: var(--black); font-weight: 600; }
+
+  /* HAMBURGER */
+  .hamburger {
+    display: none;
+    background: none; border: none; cursor: pointer;
+    font-size: 20px; line-height: 1; padding: 4px 8px;
+    color: var(--black); border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .hamburger:hover { background: var(--bg2); }
+
+  /* SIDEBAR OVERLAY (mobile) */
+  .sidebar-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 99;
+  }
+  .sidebar-overlay.open { display: block; }
+
+  /* ============================================================
+     MOBILE — max-width: 768px
+  ============================================================ */
+  @media (max-width: 768px) {
+
+    /* Show hamburger */
+    .hamburger { display: flex; align-items: center; }
+
+    /* Sidebar slides in from left */
+    .sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.26s cubic-bezier(.4,0,.2,1);
+      z-index: 101;
+    }
+    .sidebar.open { transform: translateX(0); }
+
+    /* Main takes full width */
+    .main { margin-left: 0; }
+
+    /* Topbar */
+    .topbar { padding: 12px 16px; gap: 10px; }
+    .topbar-title { font-size: 17px; }
+    .topbar-date { display: none; }
+    .sync-label { display: none; }
+
+    /* Content padding */
+    .content { padding: 16px; }
+
+    /* Cards */
+    .card { padding: 16px; }
+    .card-title { font-size: 15px; }
+
+    /* Grids collapse to single column */
+    .grid-2 { grid-template-columns: 1fr; gap: 12px; }
+    .grid-3 { grid-template-columns: 1fr; gap: 12px; }
+
+    /* Stats bar: 2×2 */
+    .stats-bar { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .stat-chip { padding: 12px 14px; }
+    .stat-chip-value { font-size: 20px; }
+
+    /* Mission block */
+    .mission-block { padding: 18px; }
+    .mission-text { font-size: 17px; }
+
+    /* Pillars: 1 col */
+    .pillars-grid { grid-template-columns: 1fr; }
+
+    /* KANBAN — horizontal scroll with fixed-width columns */
+    .kanban {
+      grid-template-columns: repeat(5, 240px);
+      overflow-x: auto;
+      padding-bottom: 12px;
+      gap: 12px;
+      /* hide scrollbar but keep scrollability */
+      -webkit-overflow-scrolling: touch;
+    }
+    .kanban-col { min-width: 240px; }
+    .kanban-card-delete { opacity: 1; } /* always show on mobile (no hover) */
+
+    /* Platform Pulse */
+    .pulse-stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .pulse-stat { padding: 12px 8px; }
+    .pulse-stat-value { font-size: 18px; }
+    .pulse-stat-label { font-size: 10px; }
+    .chart-wrap { height: 130px; }
+
+    /* Post performance toolbar */
+    .perf-toolbar { flex-direction: column; align-items: stretch; gap: 8px; margin-bottom: 12px; }
+    .perf-toolbar select { width: 100% !important; }
+    /* Performance header row */
+    #section-performance > div { flex-direction: column; align-items: stretch; gap: 10px; }
+    #section-performance > div .btn { width: 100%; }
+
+    /* Report controls */
+    #section-report > div:first-child { flex-direction: column; align-items: stretch; gap: 10px; }
+    #section-report > div:first-child > div:last-child { display: flex; gap: 8px; }
+    #report-month-select { flex: 1; }
+    .report-stat-row { grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .report-stat-num { font-size: 28px; }
+    .report-card { padding: 18px; }
+
+    /* AI */
+    .ai-wrap { max-width: 100%; }
+    #section-ai > .ai-wrap > div.flex { flex-direction: column; align-items: stretch; }
+    #ai-btn { width: 100%; }
+
+    /* Settings */
+    .settings-section { max-width: 100%; }
+    .settings-section .flex { flex-wrap: wrap; }
+
+    /* Modals */
+    .modal { padding: 20px 18px; border-radius: 14px; }
+    .modal h3 { font-size: 18px; margin-bottom: 16px; }
+
+    /* Toast */
+    #toast-container { bottom: 16px; right: 16px; left: 16px; }
+    .toast { max-width: 100%; }
+
+    /* Pipeline section header */
+    #section-pipeline > div { flex-direction: column; align-items: stretch; gap: 10px; }
+    #section-pipeline > div .btn { width: 100%; }
+
+    /* Platform Pulse section header */
+    #section-pulse > div { flex-direction: column; align-items: stretch; gap: 10px; }
+    #section-pulse > div .btn { width: 100%; }
+
+    /* Focus block */
+    .focus-block { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<div class="shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <h2>Stephanie</h2>
+      <span>Brand OS</span>
+    </div>
+    <nav class="nav">
+      <div class="nav-item active" data-section="home">
+        <span class="nav-icon">🏠</span> Brand Home
+      </div>
+      <div class="nav-item" data-section="pipeline">
+        <span class="nav-icon">📋</span> Content Pipeline
+      </div>
+      <div class="nav-item" data-section="pulse">
+        <span class="nav-icon">📈</span> Platform Pulse
+      </div>
+      <div class="nav-item" data-section="performance">
+        <span class="nav-icon">✨</span> Post Performance
+      </div>
+      <div class="nav-item" data-section="ai">
+        <span class="nav-icon">🤖</span> AI Assistant
+      </div>
+      <div class="nav-item" data-section="report">
+        <span class="nav-icon">📊</span> Monthly Report
+      </div>
+      <div class="nav-item" data-section="settings">
+        <span class="nav-icon">⚙️</span> Settings
+      </div>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+        <h1 class="topbar-title" id="topbar-title">Brand Home</h1>
+      </div>
+      <div class="topbar-sync">
+        <div class="sync-dot" id="topbar-sync-dot"></div>
+        <span class="sync-label" id="topbar-sync-label">—</span>
+        <span class="topbar-date" id="topbar-date" style="margin-left:12px"></span>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ========== BRAND HOME ========== -->
+      <section id="section-home" class="section active">
+        <div class="stats-bar" id="home-stats-bar">
+          <div class="stat-chip"><div class="stat-chip-label">Total Posts</div><div class="stat-chip-value" id="stat-total-posts">0</div></div>
+          <div class="stat-chip"><div class="stat-chip-label">Posts This Month</div><div class="stat-chip-value" id="stat-month-posts">0</div></div>
+          <div class="stat-chip"><div class="stat-chip-label">Avg Engagement</div><div class="stat-chip-value" id="stat-avg-eng">—</div></div>
+          <div class="stat-chip"><div class="stat-chip-label">Pipeline Cards</div><div class="stat-chip-value" id="stat-pipeline">0</div></div>
+        </div>
+        <div class="mission-block">
+          <div class="mission-label">Mission Statement</div>
+          <div class="mission-text" id="mission-display">Helping ambitious women use content, tech, and strategy to build brands that outlast the algorithm.</div>
+          <button class="mission-edit" onclick="editMission()">Edit mission →</button>
+        </div>
+
+        <div class="card mt-3">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="card-title" style="margin-bottom:0">Content Pillars</h3>
+            <button class="btn btn-secondary btn-sm" onclick="openPillarModal()">+ Add Pillar</button>
+          </div>
+          <p class="text-sm text-gray mb-2">The different sides of Stephanie that show up online.</p>
+          <div class="pillars-grid" id="pillars-grid"></div>
+        </div>
+
+        <div class="focus-block mt-3">
+          <h3>Monthly Focus — <span id="focus-month"></span></h3>
+          <div id="focus-display" class="mt-1" style="font-size:14px;color:var(--gray);line-height:1.6"></div>
+          <button class="mission-edit" onclick="editFocus()">Edit focus →</button>
+        </div>
+      </section>
+
+      <!-- ========== CONTENT PIPELINE ========== -->
+      <section id="section-pipeline" class="section">
+        <div class="flex justify-between items-center mb-2" style="margin-bottom:24px">
+          <p class="text-sm text-gray">Drag cards across columns. Click + to add new content.</p>
+          <button class="btn btn-primary btn-sm" onclick="openCardModal()">+ New Card</button>
+        </div>
+        <div class="kanban" id="kanban-board"></div>
+      </section>
+
+      <!-- ========== PLATFORM PULSE ========== -->
+      <section id="section-pulse" class="section">
+        <div class="flex justify-between items-center" style="margin-bottom:24px">
+          <p class="text-sm text-gray">Log weekly metrics to track growth over time.</p>
+          <button class="btn btn-primary btn-sm" onclick="openPulseLogModal()">+ Log Week</button>
+        </div>
+        <div id="pulse-platforms"></div>
+      </section>
+
+      <!-- ========== POST PERFORMANCE ========== -->
+      <section id="section-performance" class="section">
+        <div class="flex justify-between items-center" style="margin-bottom:20px">
+          <div class="perf-toolbar">
+            <select id="perf-filter-platform" onchange="renderPerformance()" style="width:140px">
+              <option value="">All Platforms</option>
+              <option value="LinkedIn">LinkedIn</option>
+              <option value="TikTok">TikTok</option>
+              <option value="YouTube">YouTube</option>
+            </select>
+            <select id="perf-sort" onchange="renderPerformance()" style="width:140px">
+              <option value="date">Sort: Date</option>
+              <option value="views">Sort: Views</option>
+              <option value="likes">Sort: Likes</option>
+              <option value="engagement">Sort: Engagement</option>
+            </select>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openPostModal()">+ Log Post</button>
+        </div>
+        <div class="card">
+          <div class="perf-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Platform</th>
+                  <th>Type</th>
+                  <th>Date</th>
+                  <th onclick="setSortCol('views')">Views <span class="sort-icon">↕</span></th>
+                  <th onclick="setSortCol('likes')">Likes <span class="sort-icon">↕</span></th>
+                  <th onclick="setSortCol('comments')">Comments <span class="sort-icon">↕</span></th>
+                  <th>Saves</th>
+                  <th onclick="setSortCol('engagement')">Eng. Rate <span class="sort-icon">↕</span></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="perf-table-body"></tbody>
+            </table>
+          </div>
+          <div id="perf-patterns" class="pattern-box mt-3" style="display:none"></div>
+        </div>
+      </section>
+
+      <!-- ========== AI ASSISTANT ========== -->
+      <section id="section-ai" class="section">
+        <div class="ai-wrap">
+          <div class="api-key-notice" id="api-key-notice">
+            Enter your Claude API key in <strong>Settings</strong> to activate the AI assistant.
+          </div>
+          <div class="card">
+            <h3 class="card-title">Content Idea Generator</h3>
+            <div class="form-group">
+              <label>Describe your content idea</label>
+              <textarea id="ai-prompt" rows="4" placeholder="e.g. I want to make a video about how I got my first client as a Nigerian freelancer living in Lagos..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Platform</label>
+              <select id="ai-platform">
+                <option>TikTok</option>
+                <option>LinkedIn</option>
+                <option>YouTube</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="generateContent()" id="ai-btn">Generate Hook + Script + Caption</button>
+          </div>
+          <div id="ai-loading" class="ai-loading" style="display:none">
+            <div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>
+            <span>Claude is thinking...</span>
+          </div>
+          <div id="ai-result" class="ai-result" style="display:none"></div>
+        </div>
+      </section>
+
+      <!-- ========== MONTHLY REPORT ========== -->
+      <section id="section-report" class="section">
+        <div class="flex justify-between items-center" style="margin-bottom:24px">
+          <div>
+            <p class="text-sm text-gray">Auto-generated from your logged data.</p>
+          </div>
+          <div class="flex gap-2">
+            <select id="report-month-select" style="width:160px"></select>
+            <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
+          </div>
+        </div>
+        <div id="report-output">
+          <div class="empty-state">
+            <div style="font-size:40px">📊</div>
+            <p>Select a month and click Generate Report</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== SETTINGS ========== -->
+      <section id="section-settings" class="section">
+        <div class="settings-section">
+          <h3 style="font-size:20px;margin-bottom:8px">Google Sheets Sync</h3>
+          <p class="settings-desc">Deploy the Google Apps Script (see code at bottom of this file) and paste the Web App URL here. All data will sync automatically.</p>
+          <div class="form-group">
+            <label>Apps Script Web App URL</label>
+            <input type="url" id="gas-url" placeholder="https://script.google.com/macros/s/..." />
+          </div>
+          <div class="flex gap-2 items-center">
+            <button class="btn btn-primary btn-sm" onclick="saveGasUrl()">Save & Test</button>
+            <span id="sync-status" class="sync-status idle"><span class="dot-status"></span> Not configured</span>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3 style="font-size:20px;margin-bottom:8px">Claude API Key</h3>
+          <p class="settings-desc">Your API key is stored only in localStorage (never sent anywhere except Anthropic). Get yours at console.anthropic.com.</p>
+          <div class="form-group">
+            <label>API Key</label>
+            <input type="password" id="claude-api-key" placeholder="sk-ant-..." />
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="saveApiKey()">Save Key</button>
+        </div>
+
+        <div class="settings-section">
+          <h3 style="font-size:20px;margin-bottom:8px">Data Management</h3>
+          <p class="settings-desc">Export your data as JSON or reset everything.</p>
+          <div class="flex gap-2">
+            <button class="btn btn-secondary btn-sm" onclick="exportData()">Export JSON</button>
+            <label class="btn btn-secondary btn-sm" style="cursor:pointer">Import JSON<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
+            <button class="btn btn-danger btn-sm" onclick="resetData()">Reset All Data</button>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- TOAST -->
+<div id="toast-container"></div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="mission-modal">
+  <div class="modal">
+    <h3>Edit Mission Statement</h3>
+    <div class="form-group">
+      <textarea id="mission-input" rows="3" placeholder="Your brand mission..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('mission-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMission()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="focus-modal">
+  <div class="modal">
+    <h3>Edit Monthly Focus</h3>
+    <div class="form-group">
+      <textarea id="focus-input" rows="3" placeholder="What are you focused on this month?"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('focus-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveFocus()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="pillar-modal">
+  <div class="modal">
+    <h3>Add Content Pillar</h3>
+    <div class="form-group">
+      <label>Pillar Name</label>
+      <input type="text" id="pillar-name" placeholder="e.g. Marketing Strategy" />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea id="pillar-desc" rows="2" placeholder="What does this pillar cover?"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('pillar-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="savePillar()">Add Pillar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="card-modal">
+  <div class="modal">
+    <h3>New Content Card</h3>
+    <div class="form-group">
+      <label>Title / Idea</label>
+      <input type="text" id="card-title" placeholder="e.g. How I landed my first $5k client" />
+    </div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label>Platform</label>
+        <select id="card-platform">
+          <option>LinkedIn</option>
+          <option>TikTok</option>
+          <option>YouTube</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Content Type</label>
+        <select id="card-type">
+          <option>Video</option>
+          <option>Carousel</option>
+          <option>Post</option>
+          <option>Short</option>
+          <option>Reel</option>
+          <option>Newsletter</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Column</label>
+      <select id="card-column">
+        <option value="idea">Idea</option>
+        <option value="scripting">Scripting</option>
+        <option value="filming">Filming</option>
+        <option value="editing">Editing</option>
+        <option value="published">Published</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('card-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCard()">Add Card</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="pulse-modal">
+  <div class="modal">
+    <h3>Log Weekly Metrics</h3>
+    <div class="form-group">
+      <label>Week of</label>
+      <input type="date" id="pulse-date" />
+    </div>
+    <div class="divider"></div>
+    <p class="text-sm text-gray mb-2" style="margin-bottom:12px">LinkedIn</p>
+    <div class="grid-2">
+      <div class="form-group"><label>Followers</label><input type="number" id="pulse-li-followers" placeholder="0" /></div>
+      <div class="form-group"><label>Eng. Rate %</label><input type="number" id="pulse-li-eng" step="0.1" placeholder="0.0" /></div>
+    </div>
+    <p class="text-sm text-gray mb-2" style="margin-bottom:12px">TikTok</p>
+    <div class="grid-2">
+      <div class="form-group"><label>Followers</label><input type="number" id="pulse-tt-followers" placeholder="0" /></div>
+      <div class="form-group"><label>Eng. Rate %</label><input type="number" id="pulse-tt-eng" step="0.1" placeholder="0.0" /></div>
+    </div>
+    <p class="text-sm text-gray mb-2" style="margin-bottom:12px">YouTube</p>
+    <div class="grid-2">
+      <div class="form-group"><label>Subscribers</label><input type="number" id="pulse-yt-followers" placeholder="0" /></div>
+      <div class="form-group"><label>Avg View %</label><input type="number" id="pulse-yt-eng" step="0.1" placeholder="0.0" /></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('pulse-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="savePulseLog()">Save Log</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="post-modal">
+  <div class="modal">
+    <h3>Log Published Post</h3>
+    <div class="form-group">
+      <label>Post Title / Caption</label>
+      <input type="text" id="post-title" placeholder="e.g. How I got 10k followers in 3 months" />
+    </div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label>Platform</label>
+        <select id="post-platform">
+          <option>LinkedIn</option>
+          <option>TikTok</option>
+          <option>YouTube</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Content Type</label>
+        <select id="post-type">
+          <option>Video</option>
+          <option>Carousel</option>
+          <option>Post</option>
+          <option>Short</option>
+          <option>Reel</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Published Date</label>
+      <input type="date" id="post-date" />
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="form-group"><label>Views</label><input type="number" id="post-views" placeholder="0" /></div>
+      <div class="form-group"><label>Likes</label><input type="number" id="post-likes" placeholder="0" /></div>
+      <div class="form-group"><label>Comments</label><input type="number" id="post-comments" placeholder="0" /></div>
+      <div class="form-group"><label>Saves</label><input type="number" id="post-saves" placeholder="0" /></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('post-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="savePost()">Log Post</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// TOAST
+// ============================================================
+function toast(msg, type = '') {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast' + (type ? ' ' + type : '');
+  t.textContent = msg;
+  c.appendChild(t);
+  requestAnimationFrame(() => { requestAnimationFrame(() => t.classList.add('show')); });
+  setTimeout(() => {
+    t.classList.remove('show');
+    setTimeout(() => t.remove(), 300);
+  }, 2800);
+}
+
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+  mission: "Helping ambitious women use content, tech, and strategy to build brands that outlast the algorithm.",
+  monthlyFocus: "Build a consistent posting rhythm across all 3 platforms and grow LinkedIn to 5k followers.",
+  pillars: [
+    { id: uid(), name: "Marketing & Strategy", desc: "Brand building, content strategy, audience growth tactics" },
+    { id: uid(), name: "Tech & Tools", desc: "AI tools, software reviews, productivity for creators" },
+    { id: uid(), name: "Career & Money", desc: "Freelancing, client work, income transparency" },
+    { id: uid(), name: "Building in Public", desc: "My journey as a Nigerian woman in tech and content" },
+  ],
+  cards: [
+    { id: uid(), title: "How I use Notion to plan 30 days of content", platform: "LinkedIn", type: "Carousel", column: "idea" },
+    { id: uid(), title: "AI tools every creator needs in 2025", platform: "TikTok", type: "Video", column: "scripting" },
+    { id: uid(), title: "My $0 to first client story", platform: "YouTube", type: "Video", column: "filming" },
+  ],
+  pulseLog: [],
+  posts: [],
+  gasUrl: "",
+  apiKey: "",
+  sortCol: "date",
+  sortDir: "desc",
+};
+
+let syncTimeout = null;
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+// ============================================================
+// PERSISTENCE
+// ============================================================
+function loadState() {
+  const saved = localStorage.getItem('brandos_state');
+  if (saved) {
+    try { Object.assign(state, JSON.parse(saved)); } catch(e) {}
+  }
+  state.gasUrl = localStorage.getItem('brandos_gas_url') || '';
+  state.apiKey = localStorage.getItem('brandos_api_key') || '';
+}
+
+function saveState() {
+  const toSave = { ...state };
+  delete toSave.gasUrl; delete toSave.apiKey;
+  localStorage.setItem('brandos_state', JSON.stringify(toSave));
+  scheduleSyncToSheets();
+}
+
+function scheduleSyncToSheets() {
+  clearTimeout(syncTimeout);
+  syncTimeout = setTimeout(syncToSheets, 1200);
+}
+
+async function syncToSheets() {
+  if (!state.gasUrl) return;
+  setSyncStatus('syncing');
+  try {
+    await fetch(state.gasUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'write', data: { ...state, apiKey: undefined } }),
+      mode: 'no-cors',
+    });
+    setSyncStatus('ok');
+  } catch(e) {
+    setSyncStatus('err');
+  }
+}
+
+async function fetchFromSheets() {
+  if (!state.gasUrl) return;
+  try {
+    const res = await fetch(state.gasUrl + '?action=read', { mode: 'cors' });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data && data.mission) {
+      Object.assign(state, data);
+      saveToLocal();
+    }
+    setSyncStatus('ok');
+  } catch(e) {
+    setSyncStatus('err');
+  }
+}
+
+function saveToLocal() {
+  const toSave = { ...state };
+  delete toSave.gasUrl; delete toSave.apiKey;
+  localStorage.setItem('brandos_state', JSON.stringify(toSave));
+}
+
+function setSyncStatus(s) {
+  // Settings panel pill
+  const el = document.getElementById('sync-status');
+  if (el) {
+    if (s === 'ok') { el.className = 'sync-status ok'; el.innerHTML = '<span class="dot-status"></span> Synced'; }
+    else if (s === 'syncing') { el.className = 'sync-status idle'; el.innerHTML = '<span class="dot-status"></span> Syncing…'; }
+    else if (s === 'err') { el.className = 'sync-status err'; el.innerHTML = '<span class="dot-status"></span> Sync error'; }
+    else { el.className = 'sync-status idle'; el.innerHTML = '<span class="dot-status"></span> Not configured'; }
+  }
+  // Topbar dot
+  const dot = document.getElementById('topbar-sync-dot');
+  const lbl = document.getElementById('topbar-sync-label');
+  if (!dot) return;
+  dot.className = 'sync-dot';
+  if (s === 'ok') { dot.classList.add('ok'); if (lbl) lbl.textContent = 'Synced'; }
+  else if (s === 'syncing') { dot.classList.add('syncing'); if (lbl) lbl.textContent = 'Syncing…'; }
+  else if (s === 'err') { dot.classList.add('err'); if (lbl) lbl.textContent = 'Sync error'; }
+  else { if (lbl) lbl.textContent = 'Local only'; }
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+const SECTION_TITLES = {
+  home: 'Brand Home', pipeline: 'Content Pipeline',
+  pulse: 'Platform Pulse', performance: 'Post Performance',
+  ai: 'AI Content Assistant', report: 'Monthly Report', settings: 'Settings'
+};
+
+document.querySelectorAll('.nav-item').forEach(el => {
+  el.addEventListener('click', () => {
+    const sec = el.dataset.section;
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('section-' + sec).classList.add('active');
+    document.getElementById('topbar-title').textContent = SECTION_TITLES[sec];
+    if (sec === 'pulse') renderPulse();
+    if (sec === 'performance') renderPerformance();
+    if (sec === 'report') renderReportMonthSelect();
+    if (sec === 'pipeline') renderKanban();
+    // Close sidebar on mobile after navigation
+    if (window.innerWidth <= 768) closeSidebar();
+  });
+});
+
+// ============================================================
+// BRAND HOME
+// ============================================================
+function renderHome() {
+  document.getElementById('mission-display').textContent = state.mission;
+  const mon = new Date();
+  document.getElementById('focus-month').textContent = mon.toLocaleString('default', { month: 'long', year: 'numeric' });
+  document.getElementById('focus-display').textContent = state.monthlyFocus || 'No focus set yet.';
+  renderPillars();
+  renderHomeStats();
+}
+
+function renderHomeStats() {
+  const thisMonth = new Date().toISOString().slice(0, 7);
+  const totalPosts = state.posts.length;
+  const monthPosts = state.posts.filter(p => p.date && p.date.startsWith(thisMonth)).length;
+  const avgEng = totalPosts
+    ? (state.posts.reduce((s, p) => s + calcEng(p), 0) / totalPosts).toFixed(1) + '%'
+    : '—';
+  const pipelineActive = state.cards.filter(c => c.column !== 'published').length;
+
+  const s = n => document.getElementById(n);
+  if (s('stat-total-posts')) s('stat-total-posts').textContent = totalPosts;
+  if (s('stat-month-posts')) s('stat-month-posts').textContent = monthPosts;
+  if (s('stat-avg-eng')) s('stat-avg-eng').textContent = avgEng;
+  if (s('stat-pipeline')) s('stat-pipeline').textContent = pipelineActive;
+}
+
+function renderPillars() {
+  const grid = document.getElementById('pillars-grid');
+  grid.innerHTML = state.pillars.map((p, i) => `
+    <div class="pillar-card">
+      <div class="pillar-accent"></div>
+      <h4>${p.name}</h4>
+      <p>${p.desc}</p>
+      <button class="btn btn-sm btn-danger" style="margin-top:10px;width:100%" onclick="deletePillar('${p.id}')">Remove</button>
+    </div>
+  `).join('');
+}
+
+function editMission() {
+  document.getElementById('mission-input').value = state.mission;
+  openModal('mission-modal');
+}
+function saveMission() {
+  state.mission = document.getElementById('mission-input').value.trim() || state.mission;
+  saveState(); renderHome(); closeModal('mission-modal');
+  toast('Mission statement updated', 'success');
+}
+
+function editFocus() {
+  document.getElementById('focus-input').value = state.monthlyFocus;
+  openModal('focus-modal');
+}
+function saveFocus() {
+  state.monthlyFocus = document.getElementById('focus-input').value.trim() || state.monthlyFocus;
+  saveState(); renderHome(); closeModal('focus-modal');
+  toast('Monthly focus updated', 'success');
+}
+
+function openPillarModal() { openModal('pillar-modal'); }
+function savePillar() {
+  const name = document.getElementById('pillar-name').value.trim();
+  const desc = document.getElementById('pillar-desc').value.trim();
+  if (!name) return;
+  state.pillars.push({ id: uid(), name, desc });
+  document.getElementById('pillar-name').value = '';
+  document.getElementById('pillar-desc').value = '';
+  saveState(); renderPillars(); closeModal('pillar-modal');
+  toast('Pillar added', 'success');
+}
+function deletePillar(id) {
+  state.pillars = state.pillars.filter(p => p.id !== id);
+  saveState(); renderPillars();
+}
+
+// ============================================================
+// KANBAN
+// ============================================================
+const COLUMNS = ['idea', 'scripting', 'filming', 'editing', 'published'];
+const COL_LABELS = { idea: 'Ideas', scripting: 'Scripting', filming: 'Filming', editing: 'Editing', published: 'Published' };
+
+function renderKanban() {
+  const board = document.getElementById('kanban-board');
+  board.innerHTML = COLUMNS.map(col => {
+    const cards = state.cards.filter(c => c.column === col);
+    return `
+      <div class="kanban-col">
+        <div class="kanban-col-header">
+          <span class="kanban-col-title">${COL_LABELS[col]}</span>
+          <span class="kanban-col-count">${cards.length}</span>
+        </div>
+        <div class="kanban-cards kanban-drop-zone" data-col="${col}"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="onDrop(event,'${col}')">
+          ${cards.map(c => renderKanbanCard(c)).join('')}
+        </div>
+        <button class="add-card-btn" onclick="openCardModal('${col}')">+ Add card</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderKanbanCard(c) {
+  const platClass = 'tag-' + c.platform.toLowerCase();
+  return `
+    <div class="kanban-card" draggable="true" data-id="${c.id}"
+      ondragstart="onDragStart(event,'${c.id}')"
+      ondragend="document.querySelectorAll('.drag-over').forEach(e=>e.classList.remove('drag-over'))">
+      <button class="kanban-card-delete" onclick="deleteCard('${c.id}')">×</button>
+      <div class="kanban-card-title">${c.title}</div>
+      <div class="kanban-card-meta">
+        <span class="tag ${platClass}">${c.platform}</span>
+        <span class="kanban-card-type">${c.type}</span>
+      </div>
+    </div>
+  `;
+}
+
+let dragId = null;
+function onDragStart(e, id) { dragId = id; e.dataTransfer.effectAllowed = 'move'; }
+function onDrop(e, col) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (!dragId) return;
+  const card = state.cards.find(c => c.id === dragId);
+  if (card) { card.column = col; saveState(); renderKanban(); }
+  dragId = null;
+}
+
+function openCardModal(col) {
+  if (col) document.getElementById('card-column').value = col;
+  openModal('card-modal');
+}
+function saveCard() {
+  const title = document.getElementById('card-title').value.trim();
+  if (!title) return;
+  state.cards.push({
+    id: uid(),
+    title,
+    platform: document.getElementById('card-platform').value,
+    type: document.getElementById('card-type').value,
+    column: document.getElementById('card-column').value,
+  });
+  document.getElementById('card-title').value = '';
+  saveState(); renderKanban(); closeModal('card-modal');
+  toast('Card added to pipeline', 'success');
+  renderHomeStats();
+}
+function deleteCard(id) {
+  state.cards = state.cards.filter(c => c.id !== id);
+  saveState(); renderKanban();
+}
+
+// ============================================================
+// PLATFORM PULSE
+// ============================================================
+const PLATFORMS_CONFIG = [
+  { key: 'linkedin', label: 'LinkedIn', color: '#0077B5', dot: '#0077B5' },
+  { key: 'tiktok', label: 'TikTok', color: '#010101', dot: '#333' },
+  { key: 'youtube', label: 'YouTube', color: '#FF0000', dot: '#FF0000' },
+];
+
+function renderPulse() {
+  const wrap = document.getElementById('pulse-platforms');
+  wrap.innerHTML = PLATFORMS_CONFIG.map(p => {
+    const logs = state.pulseLog.filter(l => l.platform === p.key).sort((a, b) => new Date(a.date) - new Date(b.date));
+    const latest = logs[logs.length - 1] || {};
+    const prev = logs[logs.length - 2] || {};
+    const follChange = latest.followers && prev.followers ? latest.followers - prev.followers : 0;
+    const engChange = latest.eng && prev.eng ? (latest.eng - prev.eng).toFixed(1) : 0;
+    return `
+      <div class="card platform-section">
+        <div class="platform-header">
+          <div class="platform-dot" style="background:${p.dot}"></div>
+          <h3>${p.label}</h3>
+        </div>
+        <div class="pulse-stats">
+          <div class="pulse-stat">
+            <div class="pulse-stat-label">Followers</div>
+            <div class="pulse-stat-value">${latest.followers ? latest.followers.toLocaleString() : '—'}</div>
+            <div class="pulse-stat-change ${follChange >= 0 ? 'up' : 'down'}">${follChange > 0 ? '+' : ''}${follChange || ''}</div>
+          </div>
+          <div class="pulse-stat">
+            <div class="pulse-stat-label">Eng. Rate</div>
+            <div class="pulse-stat-value">${latest.eng != null ? latest.eng + '%' : '—'}</div>
+            <div class="pulse-stat-change ${engChange >= 0 ? 'up' : 'down'}">${engChange > 0 ? '+' : ''}${engChange || ''}${engChange ? '%' : ''}</div>
+          </div>
+          <div class="pulse-stat">
+            <div class="pulse-stat-label">Data Points</div>
+            <div class="pulse-stat-value">${logs.length}</div>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="chart-${p.key}" height="140"></canvas>
+        </div>
+      </div>
+    `;
+  }).join('');
+  PLATFORMS_CONFIG.forEach(p => {
+    const logs = state.pulseLog.filter(l => l.platform === p.key).sort((a, b) => new Date(a.date) - new Date(b.date));
+    drawChart('chart-' + p.key, logs.map(l => l.date), logs.map(l => l.followers), p.color);
+  });
+}
+
+function drawChart(canvasId, labels, data, color) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.parentElement.offsetWidth;
+  const H = 140;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  if (data.length < 2) {
+    ctx.fillStyle = '#E8E2DE';
+    ctx.font = "13px 'DM Sans', sans-serif";
+    ctx.textAlign = 'center';
+    ctx.fillText('Log at least 2 weeks to see a chart', W / 2, H / 2);
+    return;
+  }
+
+  const pad = { top: 16, right: 20, bottom: 28, left: 52 };
+  const cW = W - pad.left - pad.right;
+  const cH = H - pad.top - pad.bottom;
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+
+  const xPos = i => pad.left + (i / (data.length - 1)) * cW;
+  const yPos = v => pad.top + cH - ((v - min) / range) * cH;
+
+  // Grid
+  ctx.strokeStyle = '#EDE5E0'; ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.top + (cH / 4) * i;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + cW, y); ctx.stroke();
+    const val = Math.round(max - (range / 4) * i);
+    ctx.fillStyle = '#9B9B9B'; ctx.font = "10px 'DM Sans'"; ctx.textAlign = 'right';
+    ctx.fillText(val >= 1000 ? (val/1000).toFixed(1)+'k' : val, pad.left - 6, y + 4);
+  }
+
+  // Gradient fill
+  const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + cH);
+  grad.addColorStop(0, color + '33');
+  grad.addColorStop(1, color + '00');
+  ctx.beginPath();
+  ctx.moveTo(xPos(0), yPos(data[0]));
+  for (let i = 1; i < data.length; i++) ctx.lineTo(xPos(i), yPos(data[i]));
+  ctx.lineTo(xPos(data.length - 1), pad.top + cH);
+  ctx.lineTo(xPos(0), pad.top + cH);
+  ctx.closePath();
+  ctx.fillStyle = grad; ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  ctx.strokeStyle = color; ctx.lineWidth = 2;
+  ctx.moveTo(xPos(0), yPos(data[0]));
+  for (let i = 1; i < data.length; i++) ctx.lineTo(xPos(i), yPos(data[i]));
+  ctx.stroke();
+
+  // Dots + labels
+  data.forEach((v, i) => {
+    ctx.beginPath();
+    ctx.arc(xPos(i), yPos(v), 4, 0, Math.PI * 2);
+    ctx.fillStyle = color; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+    if (i % Math.ceil(data.length / 5) === 0 || i === data.length - 1) {
+      ctx.fillStyle = '#9B9B9B'; ctx.font = "9px 'DM Sans'"; ctx.textAlign = 'center';
+      const lbl = labels[i] ? labels[i].slice(5) : '';
+      ctx.fillText(lbl, xPos(i), H - 6);
+    }
+  });
+}
+
+function openPulseLogModal() {
+  document.getElementById('pulse-date').value = new Date().toISOString().slice(0, 10);
+  openModal('pulse-modal');
+}
+function savePulseLog() {
+  const date = document.getElementById('pulse-date').value;
+  if (!date) return;
+  const fields = [
+    { platform: 'linkedin', fId: 'li' },
+    { platform: 'tiktok', fId: 'tt' },
+    { platform: 'youtube', fId: 'yt' },
+  ];
+  fields.forEach(({ platform, fId }) => {
+    const followers = parseInt(document.getElementById(`pulse-${fId}-followers`).value) || 0;
+    const eng = parseFloat(document.getElementById(`pulse-${fId}-eng`).value) || 0;
+    if (followers || eng) {
+      state.pulseLog = state.pulseLog.filter(l => !(l.platform === platform && l.date === date));
+      state.pulseLog.push({ id: uid(), platform, date, followers, eng });
+    }
+  });
+  // Clear inputs
+  ['li','tt','yt'].forEach(p => {
+    document.getElementById(`pulse-${p}-followers`).value = '';
+    document.getElementById(`pulse-${p}-eng`).value = '';
+  });
+  saveState(); renderPulse(); closeModal('pulse-modal');
+  toast('Weekly metrics logged', 'success');
+}
+
+// ============================================================
+// POST PERFORMANCE
+// ============================================================
+function renderPerformance() {
+  const platform = document.getElementById('perf-filter-platform').value;
+  const sortBy = document.getElementById('perf-sort').value || state.sortCol;
+  let posts = [...state.posts];
+  if (platform) posts = posts.filter(p => p.platform === platform);
+  posts.sort((a, b) => {
+    if (sortBy === 'date') return new Date(b.date) - new Date(a.date);
+    if (sortBy === 'engagement') return calcEng(b) - calcEng(a);
+    return (b[sortBy] || 0) - (a[sortBy] || 0);
+  });
+
+  const tbody = document.getElementById('perf-table-body');
+  if (!posts.length) {
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:32px;color:var(--gray)">No posts logged yet. Click "+ Log Post" to add one.</td></tr>';
+    document.getElementById('perf-patterns').style.display = 'none';
+    return;
+  }
+
+  const topEngId = posts.length ? [...posts].sort((a, b) => calcEng(b) - calcEng(a))[0].id : null;
+  const topViewId = posts.length ? [...posts].sort((a, b) => (b.views||0) - (a.views||0))[0].id : null;
+
+  tbody.innerHTML = posts.map(p => {
+    const eng = calcEng(p);
+    const platClass = 'tag-' + p.platform.toLowerCase();
+    const isBestEng = p.id === topEngId && posts.length > 1;
+    const isMostViewed = p.id === topViewId && posts.length > 1;
+    return `
+      <tr>
+        <td style="max-width:220px">
+          ${p.title}
+          ${isBestEng ? '<span class="best-badge">Top Eng.</span>' : ''}
+          ${isMostViewed && !isBestEng ? '<span class="best-badge">Most Views</span>' : ''}
+        </td>
+        <td><span class="tag ${platClass}">${p.platform}</span></td>
+        <td class="text-gray">${p.type}</td>
+        <td class="text-gray" style="white-space:nowrap">${formatDate(p.date)}</td>
+        <td>${(p.views||0).toLocaleString()}</td>
+        <td>${(p.likes||0).toLocaleString()}</td>
+        <td>${(p.comments||0).toLocaleString()}</td>
+        <td>${(p.saves||0).toLocaleString()}</td>
+        <td><span class="perf-score">${eng.toFixed(1)}%</span></td>
+        <td><button class="btn btn-sm btn-danger" onclick="deletePost('${p.id}')">×</button></td>
+      </tr>
+    `;
+  }).join('');
+
+  renderPatterns(posts);
+}
+
+function calcEng(p) {
+  if (!p.views || p.views === 0) return 0;
+  return ((+p.likes + +p.comments + +p.saves) / +p.views) * 100;
+}
+
+function renderPatterns(posts) {
+  const box = document.getElementById('perf-patterns');
+  if (posts.length < 3) { box.style.display = 'none'; return; }
+  box.style.display = 'block';
+
+  const byDay = {};
+  posts.forEach(p => {
+    if (!p.date) return;
+    const day = new Date(p.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long' });
+    if (!byDay[day]) byDay[day] = { count: 0, totalEng: 0 };
+    byDay[day].count++;
+    byDay[day].totalEng += calcEng(p);
+  });
+  const bestDay = Object.entries(byDay).sort((a, b) => (b[1].totalEng / b[1].count) - (a[1].totalEng / a[1].count))[0];
+
+  const byPlatform = {};
+  posts.forEach(p => {
+    if (!byPlatform[p.platform]) byPlatform[p.platform] = { count: 0, totalEng: 0, totalViews: 0 };
+    byPlatform[p.platform].count++;
+    byPlatform[p.platform].totalEng += calcEng(p);
+    byPlatform[p.platform].totalViews += +p.views || 0;
+  });
+  const bestPlatform = Object.entries(byPlatform).sort((a, b) => (b[1].totalEng / b[1].count) - (a[1].totalEng / a[1].count))[0];
+
+  const topPost = [...posts].sort((a, b) => calcEng(b) - calcEng(a))[0];
+
+  box.innerHTML = `
+    <h4>Patterns & Insights</h4>
+    <div class="pattern-item">Best day to post: <span>${bestDay ? bestDay[0] : '—'}</span> (highest avg engagement)</div>
+    <div class="pattern-item">Top performing platform: <span>${bestPlatform ? bestPlatform[0] : '—'}</span></div>
+    <div class="pattern-item">Best post: <span>"${topPost.title}"</span> with ${calcEng(topPost).toFixed(1)}% engagement</div>
+  `;
+}
+
+function setSortCol(col) {
+  state.sortCol = col; renderPerformance();
+}
+
+function openPostModal() {
+  document.getElementById('post-date').value = new Date().toISOString().slice(0, 10);
+  openModal('post-modal');
+}
+function savePost() {
+  const title = document.getElementById('post-title').value.trim();
+  if (!title) return;
+  state.posts.push({
+    id: uid(), title,
+    platform: document.getElementById('post-platform').value,
+    type: document.getElementById('post-type').value,
+    date: document.getElementById('post-date').value,
+    views: +document.getElementById('post-views').value || 0,
+    likes: +document.getElementById('post-likes').value || 0,
+    comments: +document.getElementById('post-comments').value || 0,
+    saves: +document.getElementById('post-saves').value || 0,
+  });
+  ['post-title','post-views','post-likes','post-comments','post-saves'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  saveState(); renderPerformance(); closeModal('post-modal');
+  toast('Post logged successfully', 'success');
+  renderHomeStats();
+}
+function deletePost(id) {
+  state.posts = state.posts.filter(p => p.id !== id);
+  saveState(); renderPerformance();
+}
+
+// ============================================================
+// AI CONTENT ASSISTANT
+// ============================================================
+const SYSTEM_PROMPT = `You are a content strategy assistant for Stephanie, a content creator who makes content about marketing, tech, career growth, and life as a Nigerian woman building in public. She creates for LinkedIn, TikTok, and YouTube.
+
+Your job is to help Stephanie turn raw ideas into polished content. When given a content idea and platform, you return:
+
+1. HOOK — A scroll-stopping opening line or on-screen text (1-2 sentences). For TikTok/YouTube it should be a spoken hook. For LinkedIn it should be a text hook.
+2. SCRIPT OUTLINE — A structured outline with 5-8 bullet points covering the key beats of the content. Keep it practical and actionable.
+3. CAPTION — A platform-appropriate caption. For LinkedIn: professional, storytelling-forward, with a CTA. For TikTok: casual, punchy, trending-aware with relevant hashtags. For YouTube: SEO-friendly description with chapters if relevant.
+
+Stephanie's voice is: warm, direct, confident, and unapologetically herself. She doesn't dumb things down but keeps things accessible. She weaves in her Nigerian identity naturally. She builds in public — sharing wins AND lessons learned the hard way.
+
+Format your response with clear sections labeled: HOOK, SCRIPT OUTLINE, CAPTION. No extra commentary.`;
+
+async function generateContent() {
+  const prompt = document.getElementById('ai-prompt').value.trim();
+  const platform = document.getElementById('ai-platform').value;
+  const apiKey = state.apiKey;
+  if (!prompt) return;
+  if (!apiKey) {
+    document.getElementById('api-key-notice').style.background = '#FEE2E2';
+    document.getElementById('api-key-notice').innerHTML = 'Please add your Claude API key in <strong>Settings</strong> first.';
+    return;
+  }
+
+  document.getElementById('ai-result').style.display = 'none';
+  document.getElementById('ai-loading').style.display = 'flex';
+  document.getElementById('ai-btn').disabled = true;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-calls': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1200,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: `Platform: ${platform}\n\nIdea: ${prompt}` }],
+      }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || 'API error');
+
+    const text = data.content[0].text;
+    renderAIResult(text);
+  } catch (err) {
+    document.getElementById('ai-result').innerHTML = `<div class="api-key-notice" style="background:#FEE2E2;border-color:#FCA5A5;color:#991B1B">Error: ${err.message}</div>`;
+    document.getElementById('ai-result').style.display = 'block';
+  } finally {
+    document.getElementById('ai-loading').style.display = 'none';
+    document.getElementById('ai-btn').disabled = false;
+  }
+}
+
+function renderAIResult(text) {
+  const sections = ['HOOK', 'SCRIPT OUTLINE', 'CAPTION'];
+  const resultEl = document.getElementById('ai-result');
+
+  let html = '<div style="display:flex;justify-content:flex-end;margin-bottom:8px"><button class="copy-btn" onclick="copyAll()">Copy all</button></div>';
+  sections.forEach((sec, i) => {
+    const startIdx = text.indexOf(sec);
+    const nextIdx = sections[i + 1] ? text.indexOf(sections[i + 1]) : text.length;
+    if (startIdx === -1) return;
+    const content = text.slice(startIdx + sec.length, nextIdx).replace(/^[\s:]+/, '').trim();
+    const safeContent = escHtml(content);
+    html += `
+      <div class="ai-result-block">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div class="ai-result-label" style="margin-bottom:0">${sec}</div>
+          <button class="copy-btn" onclick="copySection(this)" data-text="${content.replace(/"/g,'&quot;')}">Copy</button>
+        </div>
+        <div class="ai-result-content">${safeContent}</div>
+      </div>
+    `;
+  });
+
+  if (html === '<div style="display:flex;justify-content:flex-end;margin-bottom:8px"><button class="copy-btn" onclick="copyAll()">Copy all</button></div>') {
+    html += `<div class="ai-result-block"><div class="ai-result-content">${escHtml(text)}</div></div>`;
+  }
+
+  resultEl.innerHTML = html;
+  resultEl.style.display = 'block';
+  resultEl._fullText = text;
+}
+
+function copySection(btn) {
+  const text = btn.dataset.text;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1800);
+  });
+}
+
+function copyAll() {
+  const el = document.getElementById('ai-result');
+  const text = el._fullText || el.innerText;
+  navigator.clipboard.writeText(text).then(() => toast('Copied to clipboard', 'success'));
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ============================================================
+// MONTHLY REPORT
+// ============================================================
+function renderReportMonthSelect() {
+  const sel = document.getElementById('report-month-select');
+  const months = new Set();
+  state.posts.forEach(p => { if (p.date) months.add(p.date.slice(0, 7)); });
+  state.pulseLog.forEach(l => { if (l.date) months.add(l.date.slice(0, 7)); });
+  const now = new Date().toISOString().slice(0, 7);
+  months.add(now);
+  const sorted = [...months].sort().reverse();
+  sel.innerHTML = sorted.map(m => `<option value="${m}">${formatMonth(m)}</option>`).join('');
+}
+
+function generateReport() {
+  const month = document.getElementById('report-month-select').value;
+  if (!month) return;
+
+  const posts = state.posts.filter(p => p.date && p.date.startsWith(month));
+  const byPlatform = {};
+  posts.forEach(p => {
+    if (!byPlatform[p.platform]) byPlatform[p.platform] = [];
+    byPlatform[p.platform].push(p);
+  });
+
+  const totalViews = posts.reduce((s, p) => s + (+p.views||0), 0);
+  const avgEng = posts.length ? (posts.reduce((s, p) => s + calcEng(p), 0) / posts.length).toFixed(1) : 0;
+  const topPost = posts.length ? [...posts].sort((a, b) => calcEng(b) - calcEng(a))[0] : null;
+
+  // Follower growth per platform
+  const followerGrowth = PLATFORMS_CONFIG.map(p => {
+    const logs = state.pulseLog.filter(l => l.platform === p.key && l.date.startsWith(month)).sort((a, b) => new Date(a.date) - new Date(b.date));
+    if (logs.length < 2) return null;
+    return { label: p.label, growth: logs[logs.length-1].followers - logs[0].followers };
+  }).filter(Boolean);
+
+  const out = document.getElementById('report-output');
+  out.innerHTML = `
+    <div class="report-card">
+      <h2 style="font-size:26px;margin-bottom:6px">${formatMonth(month)} Report</h2>
+      <p class="text-sm text-gray" style="margin-bottom:24px">Auto-generated from your Brand OS data</p>
+      <div class="report-stat-row">
+        <div class="report-stat"><div class="report-stat-num">${posts.length}</div><div class="report-stat-label">Posts Published</div></div>
+        <div class="report-stat"><div class="report-stat-num">${totalViews >= 1000 ? (totalViews/1000).toFixed(1)+'k' : totalViews}</div><div class="report-stat-label">Total Views</div></div>
+        <div class="report-stat"><div class="report-stat-num">${avgEng}%</div><div class="report-stat-label">Avg Engagement</div></div>
+        <div class="report-stat"><div class="report-stat-num">${Object.keys(byPlatform).length}</div><div class="report-stat-label">Platforms Active</div></div>
+      </div>
+      <div class="divider"></div>
+      ${topPost ? `
+      <div class="report-section">
+        <h4>Best Performing Post</h4>
+        <div class="report-insight">"<span>${topPost.title}</span>" on <span>${topPost.platform}</span> — ${calcEng(topPost).toFixed(1)}% engagement, ${(topPost.views||0).toLocaleString()} views</div>
+      </div>` : ''}
+      ${followerGrowth.length ? `
+      <div class="report-section">
+        <h4>Follower Growth</h4>
+        ${followerGrowth.map(f => `<div class="report-insight"><span>${f.label}:</span> ${f.growth > 0 ? '+' : ''}${f.growth.toLocaleString()} followers this month</div>`).join('')}
+      </div>` : ''}
+      <div class="report-section">
+        <h4>Posts by Platform</h4>
+        ${Object.entries(byPlatform).map(([plat, ps]) => `
+          <div class="report-insight"><span>${plat}:</span> ${ps.length} post${ps.length !== 1 ? 's' : ''}, avg ${(ps.reduce((s, p) => s + calcEng(p), 0) / ps.length).toFixed(1)}% engagement</div>
+        `).join('')}
+        ${!posts.length ? '<div class="report-insight text-gray">No posts logged for this month.</div>' : ''}
+      </div>
+      ${posts.length >= 3 ? `
+      <div class="report-section">
+        <h4>What Worked</h4>
+        <div class="report-insight">${generateInsight(posts, month)}</div>
+      </div>` : ''}
+    </div>
+  `;
+}
+
+function generateInsight(posts, month) {
+  const byDay = {};
+  posts.forEach(p => {
+    if (!p.date) return;
+    const day = new Date(p.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long' });
+    if (!byDay[day]) byDay[day] = { count: 0, totalEng: 0 };
+    byDay[day].count++; byDay[day].totalEng += calcEng(p);
+  });
+  const bestDay = Object.entries(byDay).sort((a, b) => (b[1].totalEng / b[1].count) - (a[1].totalEng / a[1].count))[0];
+  const topType = [...new Set(posts.map(p => p.type))].map(t => ({
+    type: t,
+    avg: posts.filter(p => p.type === t).reduce((s, p) => s + calcEng(p), 0) / posts.filter(p => p.type === t).length
+  })).sort((a, b) => b.avg - a.avg)[0];
+
+  const parts = [];
+  if (bestDay) parts.push(`<span>${bestDay[0]}</span> was your best day to post (highest average engagement)`);
+  if (topType) parts.push(`<span>${topType.type}</span> content drove the most engagement`);
+  return parts.join('. ') + '.';
+}
+
+// ============================================================
+// SETTINGS
+// ============================================================
+function saveGasUrl() {
+  const url = document.getElementById('gas-url').value.trim();
+  state.gasUrl = url;
+  localStorage.setItem('brandos_gas_url', url);
+  if (url) { setSyncStatus('syncing'); fetchFromSheets(); toast('Google Sheets URL saved', 'success'); }
+  else { setSyncStatus('idle'); toast('Sync URL cleared'); }
+}
+
+function saveApiKey() {
+  const key = document.getElementById('claude-api-key').value.trim();
+  state.apiKey = key;
+  localStorage.setItem('brandos_api_key', key);
+  const notice = document.getElementById('api-key-notice');
+  if (key) {
+    notice.style.display = 'none';
+    toast('API key saved — AI assistant is ready', 'success');
+  } else {
+    notice.style.display = 'block';
+    notice.style.cssText = '';
+    notice.innerHTML = 'Enter your Claude API key in <strong>Settings</strong> to activate the AI assistant.';
+  }
+}
+
+function exportData() {
+  const toExport = { ...state }; delete toExport.apiKey; delete toExport.gasUrl;
+  const blob = new Blob([JSON.stringify(toExport, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `brand-os-${new Date().toISOString().slice(0,10)}.json`; a.click();
+  toast('Data exported');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (!imported.mission && !imported.posts && !imported.pillars) throw new Error('Invalid file');
+      Object.assign(state, imported);
+      saveState();
+      renderHome(); renderKanban(); renderPerformance(); renderReportMonthSelect();
+      toast('Data imported successfully', 'success');
+    } catch(err) {
+      toast('Import failed — invalid JSON file', 'error');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function resetData() {
+  if (!confirm('Reset ALL data? This cannot be undone.')) return;
+  localStorage.removeItem('brandos_state');
+  location.reload();
+}
+
+// ============================================================
+// MODAL HELPERS
+// ============================================================
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+// ============================================================
+// UTILS
+// ============================================================
+function formatDate(d) {
+  if (!d) return '';
+  return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+function formatMonth(m) {
+  if (!m) return '';
+  const [y, mo] = m.split('-');
+  return new Date(+y, +mo - 1, 1).toLocaleString('default', { month: 'long', year: 'numeric' });
+}
+
+// ============================================================
+// MOBILE SIDEBAR
+// ============================================================
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const isOpen = sidebar.classList.contains('open');
+  if (isOpen) { closeSidebar(); } else {
+    sidebar.classList.add('open');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  loadState();
+
+  // Topbar date
+  document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-US', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+
+  // Restore settings fields
+  if (state.gasUrl) document.getElementById('gas-url').value = state.gasUrl;
+  if (state.apiKey) {
+    document.getElementById('claude-api-key').value = state.apiKey;
+    document.getElementById('api-key-notice').style.display = 'none';
+  }
+
+  // Initial renders
+  renderHome();
+  renderKanban();
+  renderPerformance();
+  renderPulse();
+  renderReportMonthSelect();
+
+  // Sync status
+  if (state.gasUrl) { setSyncStatus('syncing'); fetchFromSheets(); }
+  else setSyncStatus('idle');
+
+  // Keyboard: Escape closes open modal or sidebar
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+      closeSidebar();
+    }
+  });
+
+  // Redraw charts when window resizes
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      const pulseActive = document.getElementById('section-pulse').classList.contains('active');
+      if (pulseActive) renderPulse();
+    }, 200);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+<!--
+================================================================================
+GOOGLE APPS SCRIPT — Deploy as Web App
+================================================================================
+Instructions:
+1. Go to script.google.com → New Project
+2. Paste the code below (replacing the default function)
+3. Click Deploy → New Deployment → Web App
+4. Execute as: Me | Who has access: Anyone
+5. Copy the Web App URL and paste it into Brand OS Settings
+
+================================================================================
+PASTE THIS INTO YOUR APPS SCRIPT PROJECT:
+================================================================================
+
+const SHEET_NAME = 'BrandOS_Data';
+
+function doGet(e) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    let sheet = ss.getSheetByName(SHEET_NAME);
+    if (!sheet) {
+      sheet = ss.insertSheet(SHEET_NAME);
+      sheet.appendRow(['timestamp', 'data_json']);
+    }
+    const data = sheet.getDataRange().getValues();
+    const lastRow = data[data.length - 1];
+    if (lastRow && lastRow[1]) {
+      const parsed = JSON.parse(lastRow[1]);
+      return ContentService.createTextOutput(JSON.stringify(parsed))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    return ContentService.createTextOutput('{}')
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({error: err.message}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doPost(e) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    let sheet = ss.getSheetByName(SHEET_NAME);
+    if (!sheet) {
+      sheet = ss.insertSheet(SHEET_NAME);
+      sheet.appendRow(['timestamp', 'data_json']);
+    }
+    const payload = JSON.parse(e.postData.contents);
+    if (payload.action === 'write') {
+      // Keep last 10 snapshots for history
+      const allData = sheet.getDataRange().getValues();
+      if (allData.length > 11) {
+        sheet.deleteRow(2); // Delete oldest data row (row 2 = first data after header)
+      }
+      sheet.appendRow([new Date().toISOString(), JSON.stringify(payload.data)]);
+    }
+    return ContentService.createTextOutput(JSON.stringify({status: 'ok'}))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({error: err.message}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+================================================================================
+END GOOGLE APPS SCRIPT
+================================================================================
+-->
+</body>
+</html>
